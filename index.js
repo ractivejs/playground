@@ -23,7 +23,7 @@ Ractive.decorators['ace-editor'] = function(node, options) {
     if (lock) return;
     lock = true;
     var pos = editor.getCursorPosition();
-    editor.setValue(value, -1);
+    editor.setValue(value || '', -1);
     editor.clearSelection();
     editor.moveCursorTo(pos.row, pos.column, false);
     lock = false;
@@ -69,6 +69,7 @@ var r = window.r = new Ractive({
       this.set('compiled', this.get('unit'));
     },
     'pasted-content': function(ctx, content) {
+      if (content === this.get('compressed')) return;
       var obj = JSON.parse(LZString.decompressFromEncodedURIComponent(content));
       this.set('unit', obj);
     }
