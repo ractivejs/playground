@@ -56,11 +56,13 @@ Ractive.decorators['ace-editor'] = function(node, options) {
   };
 
   handle.update(options);
+  if (options.bind) setTimeout(function() { observed(info.get(options.bind)); }, 1);
 
   return handle;
 };
 
 var docs = !!~window.location.search.indexOf('env=docs');
+var utilLock = false;
 var r = window.r = new Ractive({
   target: '#main',
   template: '#tpl',
@@ -74,6 +76,28 @@ var r = window.r = new Ractive({
       var obj = JSON.parse(LZString.decompressFromEncodedURIComponent(content));
       this.set('unit', obj);
       if (docs) this.set('unit.h.r', 'edge');
+    },
+    'encoded-content': function(ctx, content) {
+      if (utilLock) return;
+      utilLock = true;
+
+      this.set({
+        'utils.encoded': content,
+        'utils.plain': LZString.decompressFromEncodedURIComponent(content)
+      });
+
+      utilLock = false;
+    },
+    'plain-content': function(ctx, content) {
+      if (utilLock) return;
+      utilLock = true;
+
+      this.set({
+        'utils.encoded': LZString.compressToEncodedURIComponent(content),
+        'utils.plain': content
+      });
+
+      utilLock = false;
     }
   },
   observe: {
@@ -82,7 +106,7 @@ var r = window.r = new Ractive({
         var self = this;
         setTimeout(() => {
           this.findAll('.ace-editor').forEach(function(e) { self.getNodeInfo(e).decorators['ace-editor'].editor.resize(); });
-        }, 10);
+        }, 210);
       },
       init: false
     }
@@ -115,6 +139,14 @@ function debounce(fn, time, ctx) {
 
   return timeout;
 };
+
+var mqList = window.matchMedia('(min-width: 960px)');
+mqList.addListener(function(list) {
+  r.set('layout', r.get('settings.layout') || (list.matches ? 'desktop' : 'mobile'));
+});
+r.observe('settings.layout', function(value) {
+  r.set('layout', value || (mqList.matches ? 'desktop' : 'mobile'));
+});
 
 r.observe('unit', debounce(function(value) {
   var str = JSON.stringify(value);
@@ -156,5 +188,12 @@ if (window.localStorage) {
 window.addEventListener('message', function(event) {
   if (event.data && typeof event.data.code === 'string') {
     r.fire('pasted-content', event.data.code);
+    if (event.data.eval) r.set('unit.e', LZString.decompressFromEncodedURIComponent(event.data.eval));
+    if (event.data.run || event.data.eval) {
+      r.fire('play');
+    }
+    if (event.data.tab && r.get('layout') !== 'desktop') {
+      r.findComponent('Tabs').fire('selected', event.data.tab === 'html' ? 0 : event.data.tab === 'script' ? 1 : 2);
+    }
   }
 });
