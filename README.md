@@ -8,7 +8,7 @@ There are no transpilers or bundlers used at this time, only the Ractive compone
 git clone https://github.com/ractivejs/playground.git
 cd playground
 npm i
-npm run components
+node build
 npm start
 ```
 
