@@ -9,6 +9,6 @@
   },
   "scripts": {
     "components": "ls components | grep ractive.html | while read cmp; do ractive component -u ./components/$cmp > lib/$(basename $cmp | sed -re 's/\\.ractive\\.html/.js/'); done;",
-    "start": "http-server -p 8083"
+    "start": "http-server"
   }
 }

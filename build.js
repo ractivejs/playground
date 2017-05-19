@@ -6,12 +6,15 @@ let files = glob.sync( "**/components/*.html" );
 
 for ( var i = 0; i < files.length; i ++ ) {
 	let file = files[i];
+	console.log("- Compiled ", file);
 	compile( file );
 }
 
+console.log("- Build completed successfully.");
+
 function compile( file ) {
 	let content = fs.readFileSync( file, "utf-8" );
-	component.build( content, { }, readFile ).then( str => {
+	component.build( content, { escapeUnicode: true }, readFile ).then( str => {
 		writeFile( file, str );
 	} );
 }
