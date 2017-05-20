@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
+    "fs-plus": "^3.0.0",
     "ractive": "edge",
     "http-server": "^0.9"
   },
