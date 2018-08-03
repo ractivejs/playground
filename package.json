@@ -3,12 +3,20 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "fs-plus": "^3.0.0",
-    "ractive": "edge",
-    "http-server": "^0.9"
+    "@evs-chris/raui": "^0.4",
+    "http-server": "^0.11",
+    "lodash-es": "^4",
+    "lz-string": "^1.4",
+    "ractive": "^0.10",
+    "rollup": "^0.58",
+    "rollup-plugin-buble": "^0.19",
+    "rollup-plugin-node-resolve": "^3.2",
+    "rollup-plugin-commonjs": "^9.0",
+    "rollup-plugin-ractive-bin": "^1",
+    "rollup-plugin-uglify": "^3.0"
   },
   "scripts": {
-    "components": "ls components | grep ractive.html | while read cmp; do ractive component -u ./components/$cmp > lib/$(basename $cmp | sed -re 's/\\.ractive\\.html/.js/'); done;",
-    "start": "http-server"
+    "build": "rollup -c",
+    "start": "./scripts/watch.sh"
   }
 }

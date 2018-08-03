@@ -1,0 +1,566 @@
+<shell>
+  <right bind-hidden="menu.hidden" bind-over="other.hidemenu">
+    <menu>
+      <container style-height="100%">
+        <tabs fill pad class-menu transition=slide on-init="@.set('@.menuTabs', $1)" height=dynamic>
+          <tab hidden="{{!~/unit.fs}}" no-pad title="Files" class-files-tab>
+            <ul class-files style-margin-bottom=2em>
+              {{#each ~/unit.fs}}
+                <li class-renaming="~/other.rename[@index]" class-selected="~/other.selectedFile === @index" on-click="['select', @index]" on-keys(10,13)="@context.set('.name', @.get('other.filename')), @.toggle(`other.rename.${@index}`), @.set('other.selectedFile', @index)" on-keys(27)="@.toggle(`other.rename.${@index}`)" on-dblclick="@.set('other.filename', .name), @.toggle(`other.rename.${@index}`), @node.querySelector('input') && @node.querySelector('input').focus()">
+                  {{#if other.rename[@index]}}
+                    <input value="{{~/other.filename}}" />
+                  {{else}}
+                    <div>{{.name}}</div><div on-click="@context.splice('../', @index, 1)" class-remove>&#215;</div>
+                  {{/if}}
+                </li>
+              {{/each}}
+            </ul>
+            <div style-text-align=center><button style-margin="0.5em" on-click="@.set(`other.rename.${unit.fs.length}`, true), @.set('other.filename', 'New File'), @.push('unit.fs', { name: 'New File', content: '' }), @node.parentNode.parentNode.querySelector('input').focus()">+ New File</button></div>
+          </tab>
+          <tab title="Build" no-pad style-padding=0.2em>
+            <h3>Extra HTML Scripts</h3>
+            <ul class-scripts>
+              {{#each ~/unit.h.s}}
+                <li>
+                  <input value="{{.}}" /><div on-click="@context.splice('../', @index, 1)" class-remove>&#215;</div>
+                </li>
+              {{else}}
+                <li>(None)</li>
+              {{/each}}
+            </ul>
+            <div style-margin-bottom=2em style-text-align=center><button on-click="@.push('unit.h.s', '//cdn.jsdelivr.net/npm/')">+ Add HTML Script</button></div>
+            {{#if ~/unit.m}}
+            <h3>Rollup Settings</h3>
+            <label>Entry File<br/><input value="{{~/unit.ef}}" /></label>
+            {{/if}}
+          </tab>
+          <tab title="Editor">
+            <label style-margin-bottom=2em>Playground Mode
+              <select value="{{~/unit.m}}">
+                <option value="{{undefined}}">Simple</option>
+                <option value="{{1}}">Entry File</option>
+              </select>
+            </label>
+            <label>Ractive.js
+              <select value="{{~/unit.h.r}}">
+                <option value="{{null}}">(None)</option>
+                <option value="latest" selected>Latest</option>
+                <option value="edge">Edge</option>
+                <option value="0.10">0.10</option>
+                <option value="0.9">0.9</option>
+                <option value="0.8">0.8</option>
+                <option value="0.7">0.7</option>
+                <option value="0.6">0.6</option>
+              </select>
+            </label>
+            <label style-margin-bottom=2em class="check"><input type="checkbox" checked="{{other.cacheBust}}" /> Bust cache?</label>
+            <label>Editor Key Mode
+              <select value="{{settings.editor.keymode}}">
+                <option value="default">(Default)</option>
+                <option value="vim">VIM</option>
+                <option value="emacs">EMACS (RSI)</option>
+                <option value="sublime">Sublime</option>
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" checked="{{~/settings.editor.autoTag}}" /> Auto-close tags?</label>
+            <label class="check"><input type="checkbox" checked="{{~/settings.editor.autoBracket}}" /> Auto-close brackets?</label>
+            <label>Tab size <input type="number" value="{{~/settings.editor.tabSize}}" /></label>
+            <label class="check"><input type="checkbox" checked="{{other.mobile}}" /> Mobile-friendly input?</label>
+            <label>Editor Theme
+              <select value="{{settings.editor.theme}}">
+                <option value="default">(Default)</option>
+                <option value="eclipse">Eclipse</option>
+                <option value="idea">Idea</option>
+                <option value="material">Material</option>
+                <option value="monokai">Monokai</option>
+                <option value="rubyblue">Rubyblue</option>
+                <option value="solarized dark">Solarized: Dark</option>
+                <option value="solarized light">Solarized: Light</option>
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" checked="{{settings.editor.wrap}}" /> Soft wrap?</label>
+            <label style-margin-bottom=2em class="check"><input type="checkbox" checked="{{settings.editor.highlightActive}}" /> Highlight active line?</label>
+            <label>Playground Layout
+              <select value="{{~/settings.layout}}">
+                <option value="{{null}}">(Default)</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="huge">Huge</option>
+              </select>
+            </label>
+          </tab>
+          <tab title="URL" no-pad>
+            <div class-content-menu>
+              {{#unless ~/other.encoder}}
+              <label class-menuarea>Content<textarea twoway=false value="{{other.encoded}}" on-change="['pasted-content', @node.value]"></textarea></label>
+              <label><input type=checkbox checked="{{~/settings.skipUrlUpdate}}" /> Skip URL update?</label>
+              <label class-menuarea>URL<textarea readonly twoway=false value="{{other.url}}"></textarea></label>
+              {{/unless}}
+              {{#if ~/other.encoder}}
+              <label class-menuarea>Decoded<textarea twoway=false value="{{other.helpEncode}}" on-change="['encode-text', @node.value]"></textarea></label>
+              <label class-menuarea>Encoded<textarea twoway=false value="{{other.helpDecode}}" on-change="['decode-text', @node.value]"></textarea></label>
+              {{/if}}
+              <div style-text-align=center><button on-click="@.toggle('other.encoder')">{{~/other.encoder ? 'URL' : 'Encoder'}}</button></div>
+            </div>
+          </tab>
+        </tabs>
+      </container>
+    </menu>
+  </right>
+  <center>
+    <div class-main-wrapper>
+      <app-bar style-padding=0.5em>
+        <right>
+          <div class-hamburger on-click="@.toggle('menu.hidden')">&#9776;</div>
+        </right>
+        <center>
+          {{#if ~/other.inCode && ~/unit.fs}}{{unit.fs[other.selectedFile].name}}{{else}}Ractive.js Playground{{/if}}
+        </center>
+        <left>
+          <div class-play-button style-cursor=pointer on-click="play">▶</div>
+        </left>
+      </app-bar>
+      {{>pickLayout()}}
+    </div>
+  </center>
+</shell>
+
+<template id="l-0-huge">
+  <div class-main>
+    <split>
+      <split vertical>
+        <tabs flat fill height=dynamic transition=fade>
+          <tab title="HTML">{{>html}}</tab>
+        </tabs>
+        <tabs flat fill height=dynamic transition=fade>
+          <tab title="Script">{{>script}}</tab>
+        </tabs>
+        <tabs flat fill height=dynamic transition=fade>
+          <tab title="CSS">{{>css}}</tab>
+        </tabs>
+      </split>
+      <split vertical>
+        <div as-output />
+        <div class-console-wrapper>{{>'console'}}</div>
+      </split>
+    </split>
+  </div>
+</template>
+
+<template id="l-1-huge">
+  <div class-main>
+    <split>
+      <div class-file-editor-wrapper>{{>file-editor}}</div>
+      <split vertical>
+        <div as-output />
+        <div class-console-wrapper>{{>'console'}}</div>
+      </split>
+    </split>
+  </div>
+</template>
+
+<template id="l-0-large">
+  <div class-main>
+    <split>
+      <split vertical>
+        <tabs flat fill height=dynamic transition=fade>
+          <tab title="HTML">{{>html}}</tab>
+        </tabs>
+        <tabs flat fill height=dynamic transition=fade data-script-tab=0 data-css-tab=1>
+          <tab title="Script" on-enter="@.getContext('.script.editor').decorators.codemirror.resize()">{{>script}}</tab>
+          <tab title="CSS" on-enter="@.getContext('.css.editor').decorators.codemirror.resize()">{{>css}}</tab>
+        </tabs>
+      </split>
+      <split vertical>
+        <div as-output />
+        <div class-console-wrapper>{{>'console'}}</div>
+      </split>
+    </split>
+  </div>
+</template>
+
+<template id="l-1-large">
+  <div class-main>
+    <split>
+      <div class-file-editor-wrapper>{{>file-editor}}</div>
+      <split vertical>
+        <div as-output />
+        <div class-console-wrapper>{{>'console'}}</div>
+      </split>
+    </split>
+  </div>
+</template>
+
+<template id="l-0-medium">
+  <div class-main>
+    <split>
+      <tabs flat fill height=dynamic transition=fade data-html-tab=0 data-script-tab=1 data-css-tab=2>
+        <tab title="HTML" on-enter="@.getContext('.html.editor').decorators.codemirror.resize()">{{>html}}</tab>
+        <tab title="Script" on-enter="@.getContext('.script.editor').decorators.codemirror.resize()">{{>script}}</tab>
+        <tab title="CSS" on-enter="@.getContext('.css.editor').decorators.codemirror.resize()">{{>css}}</tab>
+      </tabs>
+      <tabs flat fill height=dynamic transition=fade data-output-tab=0 data-console-tab=1>
+        <tab title="Output"><div as-output /></tab>
+        <tab title="Console" on-enter="@.getContext('.eval .input').decorators.codemirror.resize()">{{>'console'}}</tab>
+      </tabs>
+    </split>
+  </div>
+</template>
+
+<template id="l-1-medium">
+  <div class-main>
+    <split>
+      <div class-file-editor-wrapper>{{>file-editor}}</div>
+      <tabs flat fill height=dynamic transition=fade data-output-tab=0 data-console-tab=1>
+        <tab title="Output"><div as-output /></tab>
+        <tab title="Console" on-enter="@.getContext('.eval .input').decorators.codemirror.resize()">{{>'console'}}</tab>
+      </tabs>
+    </split>
+  </div>
+</template>
+
+<template id="l-0-small">
+  <div class-main>
+    <tabs flat fill height=dynamic transition=fade data-html-tab=0 data-script-tab=1 data-css-tab=2 data-output-tab=3 data-console-tab=4>
+      <tab title="HTML" on-enter="@.getContext('.html.editor').decorators.codemirror.resize()">{{>html}}</tab>
+      <tab title="Script" on-enter="@.getContext('.script.editor').decorators.codemirror.resize()">{{>script}}</tab>
+      <tab title="CSS" on-enter="@.getContext('.css.editor').decorators.codemirror.resize()">{{>css}}</tab>
+      <tab title="Output"><div as-output /></tab>
+      <tab title="Console" on-enter="@.getContext('.eval .input').decorators.codemirror.resize()">{{>'console'}}</tab>
+    </tabs>
+  </div>
+</template>
+
+<template id="l-1-small">
+    <div class-main>
+      <tabs flat fill height=dynamic transition=fade data-script-tab=0 data-output-tab=1 data-console-tab=2>
+        <tab title="Code" on-enter="@.getContext('.code.editor').decorators.codemirror.resize(), @.set('other.inCode', true)" on-leave="@.set('other.inCode', false)"><div class-file-editor-wrapper>{{>file-editor}}</div></tab>
+        <tab title="Output"><div as-output /></tab>
+        <tab title="Console" on-enter="@.getContext('.eval .input').decorators.codemirror.resize()">{{>'console'}}</tab>
+      </tabs>
+    </div>
+  </template>
+
+<template id=html>
+  <div class="html editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.t', mode: { name: 'handlebars', base: 'text/html' }, inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
+</template>
+
+<template id=script>
+  <div class="script editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.s', mode: 'javascript', inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
+</template>
+
+<template id=css>
+  <div class="css editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.c', mode: 'css', inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
+</template>
+
+<template id=file-editor>
+  <div class="code editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: `unit.fs.${~/other.selectedFile}.content`, mode: fileMode, inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }"></div>
+</template>
+
+<template id=console>
+  <div class-console>
+    <div class-messages><ul>
+      {{#each messages as message}}
+        {{#if ~message.indexOf('\n')}}{{#with @local as __state}}
+          <li class="message {{.type ? `message-${.type}` : ''}}">
+            {{#if message.count}}<div class-message-counter title="{{message.count}}">{{message.count > 99 ? '∞' : message.count}}</div>{{/if}}
+            <button on-click="@context.toggle('__state.show')">...</button>
+            <pre><code>{{#if __state.show}}{{.message}}{{else}}{{.message.substring(0, .message.indexOf('\n'))}}{{/if}}</code></pre>
+          </li>
+          {{/with}}
+        {{else}}
+          <li class="message {{.type ? `message-${.type}` : ''}}">
+            {{#if .count}}<div class-message-counter title="{{.count}}">{{.count > 99 ? '∞' : .count}}</div>{{/if}}
+            <pre><code>{{.message}}</code></pre>
+          </li>
+        {{/if}}
+      {{/each}}
+    </ul></div>
+    <div class-eval>
+      <div class-prompt>&gt;</div>
+      <div class-input as-codemirror="{ lineNumbers: false, bind: '~/eval.str', mode: 'javascript', inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable' }" on-keys(10,13)="@.eval(@event)" on-keys(38)="@.evalUp(@event)" on-keys(40)="@.evalDown(@event)">[[@.set('@.consoleInput', @context) && '']]</div>
+      <div class-clear on-click="@.set('messages', [])" style-cursor=pointer title="Clear console">&#8709;</div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import init from './app';
+  init($TEMPLATE, $CSS);
+</script>
+
+<script rel=css>
+  return `
+  .editor {
+    height: 100%;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+
+  .main-wrapper {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .main {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    height: 100%;
+  }
+
+  .file-editor-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .file-editor-wrapper div {
+    flex-grow: 1;
+  }
+
+  .rmenu h3 {
+    font-size: 1.2em;
+    margin: 0.2em;
+  }
+
+  .rmenu label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+  }
+
+  .rmenu select {
+    border: none;
+    display: block;
+    width: 100%;
+    background-color: #fff;
+    color: #222;
+    padding: 0.5em;
+    box-sizing: border-box;
+    font-size: 1em;
+  }
+
+  .rmenu .check {
+    display: block;
+    margin-bottom: 0.5em;
+  }
+
+  .rmenu .check input {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+  }
+
+  .rmenu input {
+    padding: 0.5em;
+  }
+
+  .files-tab {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rmenu ul.files, .rmenu ul.scripts {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    flex-grow: 1;
+  }
+
+  .rmenu ul.files li, .rmenu ul.scripts li {
+    padding: 0.2em 0.5em;
+    margin: 0;
+    display: flex;
+  }
+
+  .rmenu ul.files li {
+    cursor: pointer;
+  }
+
+  .rmenu ul.files div.remove, .rmenu ul.scripts div.remove {
+    width: 1em;
+    text-align: center;
+  }
+
+  .rmenu ul.files .selected {
+    color: ${data('raui.primary.fga') || '#00818a'};
+    background-color: #fff;
+  }
+
+  .rmenu ul.files div:first-of-type {
+    flex-grow: 1;
+  }
+
+  .rmenu ul.files .renaming {
+    padding: 0;
+  }
+
+  .rmenu ul.files input {
+    width: 100%;
+    box-sizing: border-box;
+    flex-grow: 1;
+  }
+
+  .rmenu ul.scripts input {
+    flex-grow: 1;
+    background-color: none;
+    border: none;
+  }
+
+  .content-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+    box-sizing: border-box;
+    height: 100%;
+  }
+
+  .rmenu .menuarea {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+    flex-grow: 1;
+  }
+  .menuarea textarea {
+    flex-grow: 1;
+  }
+
+  .play-button {
+    cursor: pointer;
+    line-height: 1em;
+    height: 1em;
+    font-size: 1.5em;
+    width: 1.5em;
+    text-align: center;
+    user-select: none;
+  }
+  .hamburger {
+    width: 2em;
+    text-align: center;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  .output {
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* console */
+  .console {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+  }
+
+  .console-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  [data-console-tab] {
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+    transition-property: background-color;
+  }
+
+  .console .eval {
+    height: 1.65em;
+    display: flex;
+  }
+
+  .console .prompt {
+    text-align: center;
+    width: 1.2em;
+    color: ${data('raui.primary.fga') || '#00818a'};
+    user-select: none;
+  }
+
+  .console .eval .input {
+    flex-grow: 1;
+  }
+
+  .console .clear {
+    width: 1.5em;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .console .messages {
+    flex-grow: 1;
+    overflow: auto;
+  }
+
+  .console ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .console li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .console li.message {
+    padding: 0.25em 0.5em;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+  }
+  .console li.message-warn {
+    background-color: #ffd;
+  }
+  .console li.message-error {
+    background-color: #fde;
+  }
+  .console li.message pre {
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
+    white-space: pre-wrap;
+  }
+
+  .console .message button {
+    float: right;
+    margin: 0 0.2em;
+    height: 1.2em;
+    line-height: 0;
+    padding: 0.2em 0.5em;
+    box-sizing: border-box;
+    vertical-align: top;
+    background-color: #eee;
+    border: 1px solid #000;
+    border-radius: 0.5em;
+    outline: none;
+    min-height: 0;
+    box-shadow: none;
+    font-size: 0.9em;
+    color: #222;
+  }
+
+  .message-counter {
+    float: right;
+    color: #fff;
+    background-color: ${data('raui.primary.fga') || '#00818a'};
+    width: 1.5em;
+    height: 1em;
+    text-align: center;
+    line-height: 1em;
+    border-radius: 1em;
+  }`;
+</script>
