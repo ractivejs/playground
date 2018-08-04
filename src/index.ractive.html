@@ -115,7 +115,7 @@
           <div class-hamburger on-click="@.toggle('menu.hidden')">&#9776;</div>
         </right>
         <center>
-          {{#if ~/other.inCode && ~/unit.fs}}{{unit.fs[other.selectedFile].name}}{{else}}Ractive.js Playground{{/if}}
+          {{#if ~/inCode()}}{{unit.fs[other.selectedFile].name}}{{else}}Ractive.js Playground{{/if}}
         </center>
         <left>
           <div class-play-button style-cursor=pointer on-click="play">▶</div>

@@ -101,6 +101,13 @@ export default function init(template, css) {
         pickLayout() {
           this.set('other.inCode', false);
           return 'l-' + (this.get('unit.m') || 0) + '-' + (this.get('settings.layout') || (this.params && this.params.layout) || this.get('layout') || 'medium');
+        },
+        inCode() {
+          this.get('settings.layout'); this.get('unit.m'); this.get('layout');
+          const tab = document.querySelector('[data-script-tab]');
+          const inCode = this.get('other.inCode');
+          const files = this.get('unit.fs');
+          return files && (!tab || (inCode && tab));
         }
       }
     },
