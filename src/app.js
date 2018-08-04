@@ -26,6 +26,8 @@ export default function init(template, css) {
   Ractive.styleSet('raui.primary.bg', params.bg ? `#${params.bg}` : '#fff');
   Ractive.styleSet('raui.menu.primary.fga', params.fg ? `#${params.fg}` : '#222');
 
+  if (params.hidemenu) Ractive.styleSet('shell.sides.initialTimeout', 1);
+
   Ractive.styleSet({
     'raui.tabs.menu': {
       bg: '#222',
