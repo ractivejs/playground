@@ -172,6 +172,22 @@ export default function init(template, css) {
           setTimeout(() => this.menuTabs && this.menuTabs.select(0));
         }
       }
+    },
+    tab(tab) {
+      const attr = `data-${tab}-tab`;
+      const node = document.querySelector(`[${attr}]`);
+      if (node) {
+        const tabs = this.getContext(node).ractive;
+        tabs.select(+node.getAttribute(attr));
+        setTimeout(() => tabs.updateIndicator(), 100);
+      }
+    },
+    file(name) {
+      const files = this.get('unit.fs');
+      if (files) {
+        const idx = files.findIndex(f => f.name === name);
+        if (idx) this.set('other.selectedFile', idx);
+      }
     }
   });
 
@@ -206,4 +222,7 @@ export default function init(template, css) {
   ipc(app);
 
   app.render(document.body);
+
+  if (params.tab) app.tab(params.tab);
+  if (params.file) app.file(params.file);
 }

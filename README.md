@@ -47,6 +47,8 @@ You can control a few aspects of the playground using query params, in case you 
 * `bg` - an optional background color - defaults to `fff`.
 * `layout` - an optional default layout, that can be overridden by settings. If none is supplied, the width of the window will automatically select the best guess for most convenience. Values: `huge`, `large`, `medium`, `small`.
 * `hidemenu` - keep the menu hidden by default
+* `tab` - start on the given tab (if there are tabs in the layout): `script`, `html`, `css`, `output`, or `console`
+* `file` - start on the given file by name (if there are files in the layout)
 
 ## Interacting with the playground window
 
@@ -56,3 +58,4 @@ If you can `postMessage` with the playground window, you can send it code to loa
 * `eval` - an encoded js string
 * `run` - a boolean - `true` will cause the play button to automatically be pressed
 * `tab` - a tab to switch to - `html`, `script`, `css`, `console`, or `output`
+* `file` - a file name to switch to

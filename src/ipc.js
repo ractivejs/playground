@@ -63,12 +63,7 @@ export default function ipc(app) {
       }
     }
 
-    if (event.data.tab) {
-      const name = `data-${event.data.tab}-tab`;
-      const tab = document.querySelector(`[${name}]`);
-      if (tab) {
-        app.getContext(tab).ractive.select(+tab.getAttribute(name));
-      }
-    }
+    if (event.data.tab) app.tab(event.data.tab);
+    if (event.data.file) app.file(event.data.file);
   }, false);
 }
