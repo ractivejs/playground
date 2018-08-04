@@ -153,14 +153,14 @@ export default function init(template, css) {
           const unit = this.get('unit');
           if (!unit.fs || !unit.fs.length) {
             const script = unit.s ? unit.s : `const App = Ractive.extend({
-    template: $TEMPLATE,
-    css: $CSS,
-    cssId: 'app'
-  });
+  template: $TEMPLATE,
+  css: $CSS,
+  cssId: 'app'
+});
 
-  const app = window.app = new App({
-    target: 'body'
-  });`;
+const app = window.app = new App({
+  target: 'body'
+});`;
             const tpl = unit.t ? unit.t : `<h1>Hello, {{name || 'Ractive'}}!</h1>`
             this.set('unit.fs', [{
               name: 'index.ractive.html',
