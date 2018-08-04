@@ -108,6 +108,10 @@ export default function init(template, css) {
           const inCode = this.get('other.inCode');
           const files = this.get('unit.fs');
           return files && (!tab || (inCode && tab));
+        },
+        templates: {
+          'Simple Entry Component': 'N4IgFiBcoE5SAbAhgFwKYGcUgL4BoQBbKARgIDMMoBtUAOyULXgEs6ATNADwDoYkAxihYA3NDzApCCEAQEB7OuiXwAPGBIA+ABJoECeXgAEwYAyZGAPpaMByAEqDhY2zhwBCVQHoNmgDp0AaoYAjAsAA4o-nRGRgp0WEYAguHhRgC8Ro5CouLcyuwAFMABsbHohOHI6JBGACQAKgCiALIACgAySc14pWUCGBi1dQDCAMpjvTH9gwCS7LW2SKm2fTgAlADcAX3xictpmQDubOzyRzwHGUZ0aEfJqcV95UgwAOZoKIsARvLsAJ6raYbbZ0bwhMKRaJBLD-BBoaKxDQmOLyAwwWoAYgADNiABwkPFITZGHBBLyw+HRXAAXQIaHIrA43D4TlyEikMhwQA',
+          'Simple Entry JS': 'N4IgFiBcoE5SAbAhgFwKYGcUgL4BoQBbKARgIDMMoBtUAOyULXgEs6ATNADwDoArKgQDGAezrpx8UXSwACAIIAHRbIC8sgEpIhKFgDc0PbhPYAKYAB06FlOkKLk6SLIAGAHjAkAfAAk0CBBE8WWBgBiZZAB9I2QByLR19NFicHABCNwB6Ty8XPCtZWSEMDGcXTxCikUCYZwBiAAYGgA4SZqQAblkcPIKikoBJdmdYpGVYqxwASg6rK2k5MZV1AHc2dhEVniW1WTo0FYVlcz6UJBgAczQUEYAjEXYATwm6aY7cAF0CNHJWDm5+FQcEA'
         }
       }
     },

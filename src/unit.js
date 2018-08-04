@@ -34,6 +34,7 @@ export default function unit(app) {
       if (unit) {
         app.set('unit', unit);
       }
+      app.set('other.template', null);
     } catch (e) {
       console.error('Failed to load pasted content', e);
     }

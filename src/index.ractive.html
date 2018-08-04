@@ -80,13 +80,21 @@
             </label>
             <label class="check"><input type="checkbox" checked="{{settings.editor.wrap}}" /> Soft wrap?</label>
             <label style-margin-bottom=2em class="check"><input type="checkbox" checked="{{settings.editor.highlightActive}}" /> Highlight active line?</label>
-            <label>Playground Layout
+            <label style-margin-bottom=2em>Playground Layout
               <select value="{{~/settings.layout}}">
                 <option value="{{null}}">(Default)</option>
                 <option value="small">Small</option>
                 <option value="medium">Medium</option>
                 <option value="large">Large</option>
                 <option value="huge">Huge</option>
+              </select>
+            </label>
+            <label>Load Template
+              <select value="{{other.template}}" on-change="@node.value && @.fire('pasted-content', {}, @node.value)">
+                <option value="{{null}}">(Select One)</option>
+                {{#each ~/templates as v, @key k}}
+                  <option value="{{v}}">{{k}}</option>
+                {{/each}}
               </select>
             </label>
           </tab>
