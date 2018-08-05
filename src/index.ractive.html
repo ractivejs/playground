@@ -251,19 +251,19 @@
   </template>
 
 <template id=html>
-  <div class="html editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.t', mode: { name: 'handlebars', base: 'text/html' }, inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
+  <div class="html editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode || 'default', styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.t', mode: { name: 'handlebars', base: 'text/html' }, inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
 </template>
 
 <template id=script>
-  <div class="script editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.s', mode: 'javascript', inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
+  <div class="script editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode || 'default', styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.s', mode: 'javascript', inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
 </template>
 
 <template id=css>
-  <div class="css editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.c', mode: 'css', inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
+  <div class="css editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode || 'default', styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: '~/unit.c', mode: 'css', inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }" />
 </template>
 
 <template id=file-editor>
-  <div class="code editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode, styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: `unit.fs.${~/other.selectedFile}.content`, mode: fileMode, inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }"></div>
+  <div class="code editor" as-codemirror="{ theme: ~/settings.editor.theme, keyMap: ~/settings.editor.keymode || 'default', styleActiveLine: ~/settings.editor.highlightActive, lineWrapping: ~/settings.editor.wrap, bind: `unit.fs.${~/other.selectedFile}.content`, mode: fileMode, inputStyle: ~/settings.editor.mobile ? 'password' : 'contenteditable', tabSize: ~/settings.editor.tabSize || 2, autoCloseTags: ~/settings.editor.autoTag, autoCloseBrackets: ~/settings.editor.autoBracket, lint: true, lintOnChange: true }"></div>
 </template>
 
 <template id=console>

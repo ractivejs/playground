@@ -76,6 +76,7 @@ export default function init(template, css) {
     }
   }
 
+  const layouts = ['huge', 'large', 'medium', 'small'];
   Ractive.extendWith(App, {
     template, css,
     cssId: 'app',
@@ -100,6 +101,8 @@ export default function init(template, css) {
       return {
         pickLayout() {
           this.set('other.inCode', false);
+          let setting = this.get('settings.layout');
+          if (!~layouts.indexOf(setting)) setting = null;
           return 'l-' + (this.get('unit.m') || 0) + '-' + (this.get('settings.layout') || (this.params && this.params.layout) || this.get('layout') || 'medium');
         },
         inCode() {
