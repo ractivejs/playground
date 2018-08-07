@@ -18,6 +18,19 @@
             <div style-text-align=center><button style-margin="0.5em" on-click="@.set(`other.rename.${unit.fs.length}`, true), @.set('other.filename', 'New File'), @.push('unit.fs', { name: 'New File', content: '' }), @node.parentNode.parentNode.querySelector('input').focus()">+ New File</button></div>
           </tab>
           <tab title="Build" no-pad style-padding=0.2em>
+            <label>Ractive.js
+              <select value="{{~/unit.h.r}}">
+                <option value="{{null}}">(None)</option>
+                <option value="latest" selected>Latest</option>
+                <option value="edge">Edge</option>
+                <option value="0.10">0.10</option>
+                <option value="0.9">0.9</option>
+                <option value="0.8">0.8</option>
+                <option value="0.7">0.7</option>
+                <option value="0.6">0.6</option>
+              </select>
+            </label>
+            <label style-margin-bottom=2em class="check"><input type="checkbox" checked="{{other.cacheBust}}" /> Bust cache?</label>
             <h3>Extra HTML Scripts</h3>
             <ul class-scripts>
               {{#each ~/unit.h.s}}
@@ -35,25 +48,29 @@
             {{/if}}
           </tab>
           <tab title="Editor">
-            <label style-margin-bottom=2em>Playground Mode
+            <label>Playground Mode
               <select value="{{~/unit.m}}">
                 <option value="{{undefined}}">Simple</option>
                 <option value="{{1}}">Entry File</option>
               </select>
             </label>
-            <label>Ractive.js
-              <select value="{{~/unit.h.r}}">
-                <option value="{{null}}">(None)</option>
-                <option value="latest" selected>Latest</option>
-                <option value="edge">Edge</option>
-                <option value="0.10">0.10</option>
-                <option value="0.9">0.9</option>
-                <option value="0.8">0.8</option>
-                <option value="0.7">0.7</option>
-                <option value="0.6">0.6</option>
+            <label>Playground Layout
+              <select value="{{~/settings.layout}}">
+                <option value="{{null}}">(Default)</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="huge">Huge</option>
               </select>
             </label>
-            <label style-margin-bottom=2em class="check"><input type="checkbox" checked="{{other.cacheBust}}" /> Bust cache?</label>
+            <label style-margin-bottom=2em>Load Template
+              <select value="{{other.template}}" on-change="@node.value && @.fire('pasted-content', {}, @node.value)">
+                <option value="{{null}}">(Select One)</option>
+                {{#each ~/templates as v, @key k}}
+                  <option value="{{v}}">{{k}}</option>
+                {{/each}}
+              </select>
+            </label>
             <label>Editor Key Mode
               <select value="{{settings.editor.keymode}}">
                 <option value="default">(Default)</option>
@@ -80,29 +97,12 @@
             </label>
             <label class="check"><input type="checkbox" checked="{{settings.editor.wrap}}" /> Soft wrap?</label>
             <label style-margin-bottom=2em class="check"><input type="checkbox" checked="{{settings.editor.highlightActive}}" /> Highlight active line?</label>
-            <label style-margin-bottom=2em>Playground Layout
-              <select value="{{~/settings.layout}}">
-                <option value="{{null}}">(Default)</option>
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-                <option value="huge">Huge</option>
-              </select>
-            </label>
-            <label>Load Template
-              <select value="{{other.template}}" on-change="@node.value && @.fire('pasted-content', {}, @node.value)">
-                <option value="{{null}}">(Select One)</option>
-                {{#each ~/templates as v, @key k}}
-                  <option value="{{v}}">{{k}}</option>
-                {{/each}}
-              </select>
-            </label>
           </tab>
           <tab title="URL" no-pad>
             <div class-content-menu>
               {{#unless ~/other.encoder}}
               <label class-menuarea>Content<textarea twoway=false value="{{other.encoded}}" on-change="['pasted-content', @node.value]"></textarea></label>
-              <label><input type=checkbox checked="{{~/settings.skipUrlUpdate}}" /> Skip URL update?</label>
+              <label class-check><input type=checkbox checked="{{~/settings.skipUrlUpdate}}" /> Skip URL update?</label>
               <label class-menuarea>URL<textarea readonly twoway=false value="{{other.url}}"></textarea></label>
               {{/unless}}
               {{#if ~/other.encoder}}
