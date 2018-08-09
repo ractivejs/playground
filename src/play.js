@@ -85,7 +85,7 @@ export default function play(ctx, opts) {
 <head>
 <title>Ractive Playground Output</title>
 ${consoleRedirect}
-${unit.h && unit.h.r ? `<${''}script src="//cdn.jsdelivr.net/npm/ractive@${unit.h.r}/ractive.js"><${''}/script>\n` : ''}
+${unit.h && unit.h.r ? `<${''}script src="//cdn.jsdelivr.net/npm/ractive@${unit.h.r}/ractive.js${this.get('other.cacheBust') ? `?${+new Date()}` : ''}"><${''}/script>\n` : ''}
 ${unit.h && unit.h.s ? unit.h.s.map(s => `<${''}script src="${s}"><${''}/script>`).join('\n') : ''}
 </head>
 <body>

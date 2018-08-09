@@ -18,6 +18,12 @@
             <div style-text-align=center><button style-margin="0.5em" on-click="@.set(`other.rename.${unit.fs.length}`, true), @.set('other.filename', 'New File'), @.push('unit.fs', { name: 'New File', content: '' }), @node.parentNode.parentNode.querySelector('input').focus()">+ New File</button></div>
           </tab>
           <tab title="Build" no-pad style-padding=0.2em>
+            <label>Playground Mode
+              <select value="{{~/unit.m}}">
+                <option value="{{undefined}}">Simple</option>
+                <option value="{{1}}">Entry File</option>
+              </select>
+            </label>
             <label>Ractive.js
               <select value="{{~/unit.h.r}}">
                 <option value="{{null}}">(None)</option>
@@ -48,12 +54,6 @@
             {{/if}}
           </tab>
           <tab title="Editor">
-            <label>Playground Mode
-              <select value="{{~/unit.m}}">
-                <option value="{{undefined}}">Simple</option>
-                <option value="{{1}}">Entry File</option>
-              </select>
-            </label>
             <label>Playground Layout
               <select value="{{~/settings.layout}}">
                 <option value="{{null}}">(Default)</option>
