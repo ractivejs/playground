@@ -6,16 +6,16 @@
           <tab hidden="{{!~/unit.fs}}" no-pad title="Files" class-files-tab>
             <ul class-files style-margin-bottom=2em>
               {{#each ~/unit.fs}}
-                <li class-renaming="~/other.rename[@index]" class-selected="~/other.selectedFile === @index" on-click="['select', @index]" on-keys(10,13)="@context.set('.name', @.get('other.filename')), @.toggle(`other.rename.${@index}`), @.set('other.selectedFile', @index)" on-keys(27)="@.toggle(`other.rename.${@index}`)" on-dblclick="@.set('other.filename', .name), @.toggle(`other.rename.${@index}`), @node.querySelector('input') && @node.querySelector('input').focus()">
+                <li class-renaming=".rename != null" class-selected="~/other.selectedFile === @index" on-click="['select', @index]" on-keys(10,13)="@context.set('.name', .rename), @.toggle(`other.rename.${@index}`), @.set('other.selectedFile', @index), @context.set('.rename', undefined)" on-keys(27)="@.toggle(`other.rename.${@index}`), @context.set('.rename', undefined)" on-dblclick="@context.set('.rename', .rename != null ? undefined : .name), @.toggle(`other.rename.${@index}`), @node.querySelector('input') && @node.querySelector('input').focus()">
                   {{#if other.rename[@index]}}
-                    <input value="{{~/other.filename}}" />
+                    <input value="{{.rename}}" />
                   {{else}}
                     <div>{{.name}}</div><div on-click="@context.splice('../', @index, 1)" class-remove>&#215;</div>
                   {{/if}}
                 </li>
               {{/each}}
             </ul>
-            <div style-text-align=center><button style-margin="0.5em" on-click="@.set(`other.rename.${unit.fs.length}`, true), @.set('other.filename', 'New File'), @.push('unit.fs', { name: 'New File', content: '' }), @node.parentNode.parentNode.querySelector('input').focus()">+ New File</button></div>
+            <div style-text-align=center><button style-margin="0.5em" on-click="@.set(`other.rename.${unit.fs.length}`, true), @.push('unit.fs', { name: 'New File', content: '', rename: 'New File' }), @node.parentNode.parentNode.querySelector('input').focus()">+ New File</button></div>
           </tab>
           <tab title="Build" no-pad style-padding=0.2em>
             <label>Playground Mode
