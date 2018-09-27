@@ -53,7 +53,7 @@ function cdnResolve(app) {
       if (id[0] === '/') {
         const name = id.slice(1);
         const files = app.get('unit.fs');
-        const file = files.find(f => f.name === name);
+        const file = files.find(f => f.name === name || (!ext.test(name) && f.name === `${name}.js`));
         if (file) return file.content;
       }
       if (id[0] !== '/' && id[0] !== '.' && id[0] !== '\0') return getScript(app, id);
@@ -89,7 +89,7 @@ export default function build(app, entry) {
   return rollup.rollup(opts).then(bundle => {
     outOpts.globals = Object.assign({}, { ractive: 'Ractive' });
     (app.get('unit.gs') || []).forEach(o => outOpts.globals[o.key] = o.value);
-    
+
     return bundle.generate(outOpts).then(res => {
       return res.code;
     });
