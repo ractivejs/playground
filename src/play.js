@@ -5,7 +5,7 @@ outputFrame.className = 'output';
 
 const consoleRedirect = `
 <${''}script>(function() {
-var csl = console.log, csw = console.warn; cse = console.error;
+var csl = console.log, csw = console.warn; cse = console.error; csi = console.info || console.log;
 function proxy(fn, type) {
   return function() {
     var args = Array.prototype.slice.call(arguments);
@@ -28,11 +28,13 @@ function proxy(fn, type) {
 console.log = proxy(csl, 'log');
 console.warn = proxy(csw, 'warn');
 console.error = proxy(cse, 'error');
+console.info = proxy(csi, 'info');
+var result = proxy(csl, 'result');
 
 window.addEventListener('message', function(ev) {
   if (ev.data.eval) {
     try {
-      eval(ev.data.eval);
+      result(eval(ev.data.eval));
     } catch (e) {
       console.error(e.stack);
     }
