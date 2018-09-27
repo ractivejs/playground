@@ -6,7 +6,6 @@ const ext = /\.[a-zA-Z0-9]$/;
 let cache = {};
 
 function getScript(app, id) {
-  if (id === 'ractive') return Promise.resolve('export const Ractive = window.Ractive;\nexport default Ractive;\n');
   if (!app.get('other.cacheBust') && cache[id]) {
     if (cache[id] === 404) return Promise.reject(`Module ${id} not found`);
     else return cache[id];
@@ -76,21 +75,21 @@ function cdnResolve(app) {
 }
 
 const outOpts = {
-  output: {
-    format: 'iife',
-    globals: {}
-  }
+  format: 'iife',
+  globals: {}
 }
 
 export default function build(app, entry) {
   const opts = {
     input: entry,
-    plugins: [cdnResolve(app), RactiveLoad, RollupPluginCommonJS()]
+    plugins: [cdnResolve(app), RactiveLoad, RollupPluginCommonJS()],
+    external: (app.get('unit.gs') || []).map(o => o.key).concat(['ractive'])
   };
 
   return rollup.rollup(opts).then(bundle => {
-    outOpts.output.globals = Object.assign({}, { ractive: 'Ractive' });
-    (app.get('unit.gs') || []).forEach(o => outOpts.output.globals[o.key] = o.value);
+    outOpts.globals = Object.assign({}, { ractive: 'Ractive' });
+    (app.get('unit.gs') || []).forEach(o => outOpts.globals[o.key] = o.value);
+    
     return bundle.generate(outOpts).then(res => {
       return res.code;
     });
