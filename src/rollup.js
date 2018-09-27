@@ -1,5 +1,35 @@
 import RactiveLoad from './rollup-ractive';
 
+const CDN = '//cdn.jsdelivr.net/npm';
+const ext = /\.[a-zA-Z0-9]$/;
+
+let cache = {};
+
+function getScript(app, id) {
+  if (id === 'ractive') return Promise.resolve('export const Ractive = window.Ractive;\nexport default Ractive;\n');
+  if (!app.get('other.cacheBust') && cache[id]) {
+    if (cache[id] === 404) return Promise.reject(`Module ${id} not found`);
+    else return cache[id];
+  }
+  console.info(`fetching npm module ${id}`);
+  const bust = app.get('other.cacheBust') ? `?${Date.now()}` : '';
+  return fetch(`${CDN}/${id}${bust}`).then(r => {
+    if (r.status > 299) {
+      if (!ext.test(id)) return fetch(`${CDN}/${id}.js${bust}`).then(r => {
+        if (r.status > 299) throw new Error(`Module ${id} not found`);
+        else return r.text();
+      });
+      else throw new Error(`Module ${id} not found`);
+    } else return r.text();
+  }).then(t => {
+    cache[id] = t;
+    return t;
+  }, e => {
+    cache[id] = 404;
+    throw e;
+  });
+}
+
 function cdnResolve(app) {
   return {
     name: 'cdn-resolve',
@@ -11,16 +41,14 @@ function cdnResolve(app) {
       else {
         let start = unit.split('/');
         start.pop();
-        start.shift();
         const tgt = target.split('/');
         if (tgt[0] === '.') tgt.shift();
         while (start.length && tgt[0] === '..') {
           start.pop();
           tgt.shift();
         }
-        return `/${start.concat(tgt).join('/')}`;
+        return `${start.concat(tgt).join('/')}`;
       }
-      return Promise.reject('lol, nope')
     },
     load(id) {
       if (id[0] === '/') {
@@ -29,7 +57,7 @@ function cdnResolve(app) {
         const file = files.find(f => f.name === name);
         if (file) return file.content;
       }
-      if (id[0] !== '/' && id[0] !== '.' && id[0] !== '\0') return fetch(`//cdn.jsdelivr.net/npm/${id}${app.get('other.cacheBust') ? `?${+(new Date())}` : ''}`).then(r => r.text());
+      if (id[0] !== '/' && id[0] !== '.' && id[0] !== '\0') return getScript(app, id);
       if (id === '\0commonjsHelpers') return `
   export var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
   export function commonjsRequire () {
@@ -49,7 +77,8 @@ function cdnResolve(app) {
 
 const outOpts = {
   output: {
-    format: 'iife'
+    format: 'iife',
+    globals: { ractive: 'Ractive' }
   }
 }
 
@@ -63,5 +92,15 @@ export default function build(app, entry) {
     return bundle.generate(outOpts).then(res => {
       return res.code;
     });
+  }, err => {
+    err = JSON.stringify(err.stack);
+    err = err.substr(1, err.length - 2);
+    return `const div = document.createElement('div');
+div.innerHTML = '<h1>Error building script:</h1><code><pre style="white-space: pre-wrap; word-break: break-all;">${err}</pre></code>';
+div.setAttribute('style', 'position: absolute; top: 0; bottom: 0; left: 0; right: 0; padding: 2em; border: 1px solid red; color: red; background-color: rgba(255, 0, 0, 0.1); box-sizing: border-box; overflow: auto;');
+document.body.appendChild(div);
+document.body.style.margin = 0;
+document.body.style.padding = 0;
+`;
   });
 }
