@@ -484,6 +484,7 @@
     flex-direction: column;
     flex-grow: 1;
     height: 100%;
+    overflow: hidden;
   }
 
   .console-wrapper {
@@ -502,6 +503,7 @@
   .console .eval {
     height: 1.65em;
     display: flex;
+    flex-shrink: 2;
   }
 
   .console .prompt {
@@ -524,6 +526,8 @@
   .console .messages {
     flex-grow: 1;
     overflow: auto;
+    flex-shrink: 2;
+    height: 100%;
   }
 
   .console ul {

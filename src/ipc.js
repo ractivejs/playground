@@ -3,7 +3,7 @@ import lz from 'lz-string';
 export default function ipc(app) {
   window.addEventListener('message', function(event) {
     if (event.data.log) { // aparently firefox doesn't isTrusted the same way chrome does
-      const csl = app.find('.console');
+      const csl = app.find('.console .messages');
       const scroll = csl.scrollTop + csl.clientHeight >= csl.scrollHeight - 5;
       const idx = (app.get('messages') || []).length - 1;
       let last = (app.get('messages') || [])[idx];
