@@ -29,7 +29,7 @@ function cdnResolve(app) {
         const file = files.find(f => f.name === name);
         if (file) return file.content;
       }
-      if (id[0] !== '/' && id[0] !== '.' && id[0] !== '\0') return fetch(`//cdn.jsdelivr.net/npm/${id}`).then(r => r.text());
+      if (id[0] !== '/' && id[0] !== '.' && id[0] !== '\0') return fetch(`//cdn.jsdelivr.net/npm/${id}${app.get('other.cacheBust') ? `?${+(new Date())}` : ''}`).then(r => r.text());
       if (id === '\0commonjsHelpers') return `
   export var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
   export function commonjsRequire () {
