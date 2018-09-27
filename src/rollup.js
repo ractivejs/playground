@@ -78,7 +78,7 @@ function cdnResolve(app) {
 const outOpts = {
   output: {
     format: 'iife',
-    globals: { ractive: 'Ractive' }
+    globals: {}
   }
 }
 
@@ -89,6 +89,8 @@ export default function build(app, entry) {
   };
 
   return rollup.rollup(opts).then(bundle => {
+    outOpts.output.globals = Object.assign({}, { ractive: 'Ractive' });
+    (app.get('unit.gs') || []).forEach(o => outOpts.output.globals[o.key] = o.value);
     return bundle.generate(outOpts).then(res => {
       return res.code;
     });

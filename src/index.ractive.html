@@ -51,6 +51,14 @@
             {{#if ~/unit.m}}
             <h3>Rollup Settings</h3>
             <label>Entry File<br/><input value="{{~/unit.ef}}" /></label>
+            Globals
+            <ul class-globals>
+              <li>ractive: Ractive</li>
+            {{#each ~/unit.gs}}
+              <li><input value="{{.key}}" placeholder="module" />:<input value="{{.value}}" placeholder="global var" /><div on-click="@context.splice('../', @index, 1)" class-remove>&#215;</div></li>
+            {{/each}}
+            </ul>
+            <div style-margin-bottom=2em style-text-align=center><button on-click="@.push('unit.gs', {})">+ Add Global</button></div>
             {{/if}}
           </tab>
           <tab title="Editor">
@@ -375,14 +383,14 @@
     flex-direction: column;
   }
 
-  .rmenu ul.files, .rmenu ul.scripts {
+  .rmenu ul.files, .rmenu ul.scripts, .rmenu ul.globals {
     padding: 0;
     margin: 0;
     list-style: none;
     flex-grow: 1;
   }
 
-  .rmenu ul.files li, .rmenu ul.scripts li {
+  .rmenu ul.files li, .rmenu ul.scripts li, .rmenu ul.globals li {
     padding: 0.2em 0.5em;
     margin: 0;
     display: flex;
@@ -392,9 +400,11 @@
     cursor: pointer;
   }
 
-  .rmenu ul.files div.remove, .rmenu ul.scripts div.remove {
+  .rmenu ul.files div.remove, .rmenu ul.scripts div.remove, .rmenu ul.globals div.remove {
     width: 1em;
     text-align: center;
+    font-size: 1.2em;
+    cursor: pointer;
   }
 
   .rmenu ul.files .selected {
@@ -416,10 +426,13 @@
     flex-grow: 1;
   }
 
-  .rmenu ul.scripts input {
+  .rmenu ul.scripts input, .rmenu ul.globals input {
     flex-grow: 1;
-    background-color: none;
+    background-color: #fff;
     border: none;
+  }
+  .rmenu ul.globals input {
+    width: 45%;
   }
 
   .content-menu {
