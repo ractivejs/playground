@@ -146,6 +146,7 @@ export default function init(template, css) {
       render() {
         this.shell = this.findComponent('shell');
         this.menu = this.findComponent('menu');
+        this.menuTabs.select(1);
       },
       play,
       select(ctx, idx) {
@@ -235,7 +236,7 @@ const app = window.app = new App({
   window.addEventListener('resize', autoLayout);
   autoLayout();
 
-  unit(app);
+  setTimeout(() => unit(app), 14);
   settings(app);
   ipc(app);
 
