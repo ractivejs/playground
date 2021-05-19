@@ -1,5 +1,5 @@
 const ractive = require('rollup-plugin-ractive-bin');
-const buble = require('rollup-plugin-buble');
+const buble = require('@rollup/plugin-buble');
 const uglify = require('rollup-plugin-uglify');
 const resolve = require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
