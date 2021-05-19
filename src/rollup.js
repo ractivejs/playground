@@ -93,11 +93,11 @@ export default function build(app, entry) {
     return bundle.generate(outOpts).then(res => {
       return res.code;
     });
-  }, err => {
-    err = JSON.stringify(err.stack);
+  }, e => {
+    let err = JSON.stringify((e.message ? `${e.message}\n\n` : '') + e.stack);
     err = err.substr(1, err.length - 2);
     return `const div = document.createElement('div');
-div.innerHTML = '<h1>Error building script:</h1><code><pre style="white-space: pre-wrap; word-break: break-all;">${err}</pre></code>';
+div.innerHTML = \`<h1>Error building script:</h1><code><pre style="white-space: pre-wrap; word-break: break-all;">${err}</pre></code>\`;
 div.setAttribute('style', 'position: absolute; top: 0; bottom: 0; left: 0; right: 0; padding: 2em; border: 1px solid red; color: red; background-color: rgba(255, 0, 0, 0.1); box-sizing: border-box; overflow: auto;');
 document.body.appendChild(div);
 document.body.style.margin = 0;
