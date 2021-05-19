@@ -340,8 +340,8 @@ const RollupPlugin = {
   name: 'ractive-bin',
   transform(code, id) {
     if (!filter.test(id)) return null;
-    return getRactive(app.get('unit.h.r') || 'latest').then(Ractive => {
-      return build(code, { Ractive }, () => Promise.reject('nope, lol')).then(res => {
+    return getRactive(app.get('unit.h.r') || window.Ractive).then(Ractive => {
+      return build(code, { Ractive, autoExport: true }, () => Promise.reject('nope, lol')).then(res => {
         return { code: res, map: { mappings: '' } };
       });
     });
