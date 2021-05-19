@@ -282,7 +282,7 @@
   <div class-console>
     <div class-messages><ul>
       {{#each messages as message}}
-        {{#if ~message.indexOf('\n')}}{{#with @local as __state}}
+        {{#if ~message.message.indexOf('\n')}}{{#with @local as __state}}
           <li class="message {{.type ? `message-${.type}` : ''}}">
             {{#if message.count}}<div class-message-counter title="{{message.count}}">{{message.count > 99 ? '∞' : message.count}}</div>{{/if}}
             <button on-click="@context.toggle('__state.show')">...</button>
