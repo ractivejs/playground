@@ -3,6 +3,8 @@ import rollup from './rollup';
 export const outputFrame = document.createElement('iframe');
 outputFrame.className = 'output';
 
+let inited = false;
+
 const consoleRedirect = `
 <${''}script>(function() {
 var csl = console.log, csw = console.warn; cse = console.error; csi = console.info || console.log;
@@ -38,6 +40,8 @@ window.addEventListener('message', function(ev) {
     } catch (e) {
       console.error(e.stack);
     }
+  } else if (ev.data.reload) {
+    window.location.reload();
   }
 });
 
@@ -103,14 +107,18 @@ ${unit.h && unit.h.s ? unit.h.s.map(s => `<${''}script src="${s}"><${''}/script>
   if (render && render.then) {
     render.then(html => {
       if (outputFrame.contentWindow) {
-        outputFrame.contentWindow.location = 'about:blank';
+        if (inited) outputFrame.contentWindow.postMessage({ reload: true }, '*');
+        else outputFrame.contentWindow.location = 'about:blank';
 
-        setTimeout(function() {
+        function load() {
+          outputFrame.removeEventListener('load', load);
           var doc = outputFrame.contentDocument;
           doc.open();
           doc.write(html);
           doc.close();
-        }, 1);
+        };
+
+        outputFrame.addEventListener('load', load);
 
         const tab = document.querySelector('[data-output-tab]');
         if ((!opts || !opts.init) && tab) {
