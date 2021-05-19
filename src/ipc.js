@@ -6,7 +6,7 @@ export default function ipc(app) {
       const csl = app.find('.console .messages');
       const scroll = csl.scrollTop + csl.clientHeight >= csl.scrollHeight - 5;
       const idx = (app.get('messages') || []).length - 1;
-      let last = (app.get('messages') || [])[idx];
+      const last = app.get(`messages.${idx}`) || {};
       const message = event.data.log.join('\n');
 
       if (last && last.message === message && last.type === event.data.type) {

@@ -14,6 +14,8 @@ import settings from './settings.js';
 import unit from './unit.js'
 import ipc from './ipc.js';
 
+import './debug.js';
+
 export default function init(template, css) {
   const params = window.location.search.slice(1).split('&').map(p => p.split('=')).reduce((a, c) => {
     a[c[0]] = c.length === 1 || c[1];
